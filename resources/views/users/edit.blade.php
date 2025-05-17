@@ -9,7 +9,8 @@
     </div>
       <div class="card-body">
 
-        <form method="PATCH" action="{{ route('users.update', $user) }}">
+        <form method="POST" action="{{ route('users.update', $user) }}">
+            {{method_field('PATCH')}}
             {{ csrf_field() }}
 
             <div class="mb-3">
