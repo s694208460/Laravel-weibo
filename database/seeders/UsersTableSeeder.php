@@ -19,7 +19,8 @@ class UsersTableSeeder extends Seeder
         User::find(1)->update([
             'name' => 'admin',
             'email' => 'summer@example.com',
-            'password' => bcrypt('admin'),
+            'password' => bcrypt('123456'),
+            'is_admin' => true,
         ]);
     }
 }

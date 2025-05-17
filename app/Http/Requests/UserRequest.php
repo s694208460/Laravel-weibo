@@ -11,12 +11,7 @@ class UserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $this->registerPolicies();
-        // 修改策略自动发现的逻辑
-        Gate::guessPolicyNamesUsing(function ($modelClass) {
-            // 动态返回模型对应的策略名称，如：// 'App\Models\User' => 'App\Policies\UserPolicy',
-            return 'App\Policies\\' . class_basename($modelClass) . 'Policy';
-        });
+        return true;
     }
 
     /**
@@ -27,9 +22,16 @@ class UserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|unique:users|max:50',
-            'email' => 'required|email|unique:users|max:255',
+            'name' => 'required||max:50',
+            'email' => 'required|email||max:255',
             'password' => 'required|confirmed|min:6'
         ];
+    }
+    protected function registerPolicies(): void
+    {
+        Gate::guessPolicyNamesUsing(function ($modelClass) {
+            // 动态返回模型对应的策略名称，如：// 'App\Models\User' => 'App\Policies\UserPolicy',
+            return 'App\Policies\\' . class_basename($modelClass) . 'Policy';
+        });
     }
 }

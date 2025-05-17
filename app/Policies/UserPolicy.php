@@ -11,7 +11,17 @@ class UserPolicy
 
     public function update(User $currentUser, User $user)
     {
-        if ($currentUser->id === 1) {
+        if ($currentUser->is_admin) {
+            return true;
+        }
+        return $currentUser->id === $user->id;
+    }
+
+    public function destroy(User $currentUser, User $user)
+    {
+        if ($user->is_admin) {
+            return false;
+        } elseif ($currentUser->is_admin) {
             return true;
         }
         return $currentUser->id === $user->id;

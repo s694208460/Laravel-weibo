@@ -10,11 +10,13 @@
         <p>Email: {{ $user->email }}</p>
         <a href="{{ route('users.show', $user) }}" class="btn btn-primary">查看</a>
         <a href="{{ route('users.edit', $user) }}" class="btn btn-secondary">编辑</a>
-        <form action="{{ route('users.destroy', $user) }}" method="POST" style="display:inline;">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn btn-danger">删除</button>
-        </form>
+        @can('destroy', $user)
+            <form action="{{ route('users.destroy', $user) }}" method="POST" style="display:inline;">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger">删除</button>
+            </form>
+        @endcan
     </div>
 @endforeach
 <div class="mt-3">
