@@ -9,6 +9,7 @@ use App\Http\Requests\UserRequest;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Gate;
 
 class UsersController extends Controller
 {
@@ -37,7 +38,7 @@ class UsersController extends Controller
 
     public function show(User $user)
     {
-        $this->authorize('update', $user);
+        Gate::authorize('update-user', $user);
         $statuses = $user->statuses()
             ->orderBy('created_at', 'desc')
             ->paginate(10);
@@ -70,12 +71,12 @@ class UsersController extends Controller
     }
     public function edit(User $user)
     {
-        $this->authorize('update', $user);
+        Gate::authorize('update-user', $user);
         return view('users.edit', compact('user'));
     }
     public function update(UserRequest $request, User $user)
     {
-        $this->authorize('update', $user);
+        Gate::authorize('update-user', $user);
         $validatedData = $request->validated();
         $user->update($validatedData);
 
@@ -84,7 +85,7 @@ class UsersController extends Controller
     }
     public function destroy(User $user)
     {
-        $this->authorize('destroy', $user);
+        Gate::authorize('destroy-user', $user);
         $user->delete();
         session()->flash('success', '删除成功！');
         return redirect()->route('users.index');
@@ -111,4 +112,17 @@ class UsersController extends Controller
         return redirect()->route('users.show', [$user]);
     }
 
+    public function followings(User $user)
+    {
+        $users = $user->followings()->paginate(30);
+        $title = $user->name . '关注的人';
+        return view('users.show_follow', compact('users', 'title'));
+    }
+
+    public function followers(User $user)
+    {
+        $users = $user->followers()->paginate(30);
+        $title = $user->name . '的粉丝';
+        return view('users.show_follow', compact('users', 'title'));
+    }
 }

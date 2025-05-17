@@ -3,14 +3,17 @@
 @section('content')
     @if (Auth::check())
         <div class="row">
-        <div class="col-md-8">
-            <section class="status_form">
-            @include('shared._status_form')
-            </section>
-        </div>
-        <h4>微博列表</h4>
-        <hr>
-        @include('shared._feed')
+            <div class="col-md-8">
+                <section class="status_form">
+                    @include('shared._status_form')
+                </section>
+                <h4>微博列表</h4>
+                <hr>
+                @include('shared._feed')
+            </div>
+            <section class="stats mt-2">
+                @include('shared._stats', ['user' => Auth::user()])
+              </section>
         </div>
     @else
         <div class="bg-light p-3 p-sm-5 rounded">

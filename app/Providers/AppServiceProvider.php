@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Status;
 use App\Policies\StatusPolicy;
+use App\Models\User;
+use App\Policies\UserPolicy;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +28,18 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('destroy-status', function ($user, $status) {
             return $user->id === $status->user_id;
         });
+
+        Gate::policy(User::class, UserPolicy::class);
+        Gate::define('update-user', function ($user, $model) {
+            return $user->id === $model->id || $user->is_admin;
+        });
+        Gate::define('destroy-user', function ($user, $model) {
+            return $user->id === $model->id || $user->is_admin;
+        });
+        Gate::define('follow', function ($user, $model) {
+            return $user->id !== $model->id;
+        });
+
 
     }
 }
